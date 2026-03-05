@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Study Tracker</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/tasks.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar (same as dashboard) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-wrapper">
+                    <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10L85 30V70L50 90L15 70V30L50 10Z" stroke="currentColor" stroke-width="4" fill="none"/>
+                        <path d="M50 30L70 42V62L50 74L30 62V42L50 30Z" fill="currentColor"/>
+                        <circle cx="50" cy="52" r="8" fill="var(--bg-primary)"/>
+                    </svg>
+                    <span class="logo-text">STUDY<span>TRACK</span></span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="tasks.html" class="nav-item active">
+                    <span class="nav-icon">✓</span>
+                    <span class="nav-text">Tasks</span>
+                </a>
+                <a href="timer.html" class="nav-item">
+                    <span class="nav-icon">⏱</span>
+                    <span class="nav-text">Timer</span>
+                </a>
+                <a href="leaderboard.html" class="nav-item">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-text">Leaderboard</span>
+                </a>
+                <a href="quiz.html" class="nav-item">
+                    <span class="nav-icon">🧠</span>
+                    <span class="nav-text">Quiz</span>
+                </a>
+                <a href="doubts.html" class="nav-item">
+                    <span class="nav-icon">❓</span>
+                    <span class="nav-text">Doubts</span>
+                </a>
+                <a href="bots.html" class="nav-item admin-only">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-text">Manage Bots</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                </div>
+                <button class="btn-logout" id="logoutBtn">
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <div class="user-avatar" id="userAvatar">A</div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Tasks</h1>
+                        <p class="page-subtitle">Organize your study goals</p>
+                    </div>
+                    <button class="btn-add-task" id="btnAddTask">
+                        <span>➕ New Task</span>
+                    </button>
+                </div>
+
+                <!-- Task Filters -->
+                <div class="task-filters">
+                    <button class="filter-btn active" data-filter="all">All Tasks</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="tasks-container" id="tasksContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <p>No tasks yet</p>
+                        <button class="btn-secondary" id="btnAddTaskEmpty">Create your first task</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">New Task</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <form id="taskForm" class="task-form">
+                <div class="form-group">
+                    <label for="taskTitle">Title</label>
+                    <input type="text" id="taskTitle" placeholder="Task title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskSubject">Subject</label>
+                    <input type="text" id="taskSubject" placeholder="Subject name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskTime">Estimated Time (hours)</label>
+                        <input type="number" id="taskTime" placeholder="2" min="0.5" step="0.5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="taskDeadline">Deadline</label>
+                        <input type="date" id="taskDeadline" required>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="btnCancel">Cancel</button>
+                    <button type="submit" class="btn-submit">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/tasks.js"></script>
+</body>
+</html>

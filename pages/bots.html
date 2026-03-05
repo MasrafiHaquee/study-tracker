@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bots - Study Tracker</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .bots-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .btn-bot {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-bot.primary { background: var(--color-primary); color: #000; }
+        .btn-bot.primary:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+        .btn-bot.secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 2px solid var(--border-color); }
+        .btn-bot.secondary:hover { border-color: var(--color-primary); color: var(--color-primary); }
+        .btn-bot.danger { background: rgba(255,61,113,0.1); color: var(--color-accent); border: 2px solid var(--color-accent); }
+        .btn-bot.danger:hover { background: var(--color-accent); color: #fff; }
+        .btn-bot:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+        #progressSection {
+            display: none;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar-track { height: 10px; background: var(--bg-tertiary); border-radius: 99px; overflow: hidden; margin-bottom: 0.5rem; }
+        #progressFill { height: 100%; background: var(--color-primary); border-radius: 99px; width: 0%; transition: width 0.3s ease; }
+        #progressText { font-size: 0.85rem; color: var(--text-secondary); }
+
+        #botStats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .bot-stat-card { background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; text-align: center; transition: border-color 0.2s; }
+        .bot-stat-card:hover { border-color: var(--color-primary); }
+        .stat-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+        .stat-value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--color-primary); }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; }
+
+        .bots-filter-row { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
+        .bots-filter-row input, .bots-filter-row select { padding: 0.55rem 1rem; border-radius: var(--radius-sm); border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; }
+        .bots-filter-row input { flex: 1; min-width: 180px; }
+        #botCount { font-size: 0.85rem; color: var(--text-secondary); margin-left: auto; }
+
+        #botsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+
+        .bot-card { background: var(--bg-secondary); border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; transition: all 0.2s ease; }
+        .bot-card:hover { border-color: var(--color-primary); box-shadow: 0 0 16px rgba(0,217,255,0.15); transform: translateY(-2px); }
+        .bot-card.inactive { opacity: 0.65; }
+        .bot-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.8rem; }
+        .bot-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; flex-shrink: 0; }
+        .bot-info { flex: 1; min-width: 0; }
+        .bot-name { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bot-meta { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.2rem; }
+        .personality-badge { font-size: 0.7rem; background: var(--bg-tertiary); padding: 0.15rem 0.5rem; border-radius: 99px; color: var(--text-secondary); }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .status-dot.online { background: var(--color-success); box-shadow: 0 0 5px var(--color-success); }
+        .status-dot.offline { background: var(--text-muted); }
+        .bot-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; margin-bottom: 0.6rem; }
+        .mini-stat { background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.4rem 0.2rem; text-align: center; }
+        .mini-val { display: block; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; color: var(--color-primary); }
+        .mini-lbl { display: block; font-size: 0.6rem; color: var(--text-muted); }
+        .bot-subject { font-size: 0.78rem; color: var(--text-secondary); background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.3rem 0.6rem; }
+
+        .bots-loading { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 3rem; color: var(--text-secondary); }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-bots { grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-secondary); }
+        .empty-bots .empty-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .empty-bots h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 0.8rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; max-width: 360px; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast-success { background: var(--color-success); color: #000; }
+        .toast-error { background: var(--color-accent); color: #fff; }
+        .toast-warning { background: var(--color-warning); color: #000; }
+
+        .personality-legend { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .legend-item { font-size: 0.75rem; background: var(--bg-tertiary); border-radius: 99px; padding: 0.2rem 0.7rem; color: var(--text-secondary); }
+
+        .info-box { background: rgba(0,217,255,0.08); border: 2px solid rgba(0,217,255,0.3); border-radius: var(--radius-md); padding: 0.9rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--text-secondary); }
+        .info-box strong { color: var(--color-primary); }
+
+        @media (max-width: 768px) {
+            #botStats { grid-template-columns: repeat(2, 1fr); }
+            #botsGrid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            #botsGrid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-wrapper">
+                    <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10L85 30V70L50 90L15 70V30L50 10Z" stroke="currentColor" stroke-width="4" fill="none"/>
+                        <path d="M50 30L70 42V62L50 74L30 62V42L50 30Z" fill="currentColor"/>
+                        <circle cx="50" cy="52" r="8" fill="var(--bg-primary)"/>
+                    </svg>
+                    <span class="logo-text">STUDY<span>TRACK</span></span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a>
+                <a href="tasks.html" class="nav-item"><span class="nav-icon">✓</span><span class="nav-text">Tasks</span></a>
+                <a href="timer.html" class="nav-item"><span class="nav-icon">⏱</span><span class="nav-text">Timer</span></a>
+                <a href="leaderboard.html" class="nav-item"><span class="nav-icon">🏆</span><span class="nav-text">Leaderboard</span></a>
+                <a href="quiz.html" class="nav-item"><span class="nav-icon">🧠</span><span class="nav-text">Quiz</span></a>
+                <a href="doubts.html" class="nav-item"><span class="nav-icon">❓</span><span class="nav-text">Doubts</span></a>
+                <a href="bots.html" class="nav-item admin-only active"><span class="nav-icon">🤖</span><span class="nav-text">Manage Bots</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="themeToggle"><span class="theme-icon">🌙</span></div>
+                <button class="btn-logout" id="logoutBtn"><span>Logout</span></button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <div class="user-avatar" id="userAvatar">A</div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1 class="page-title">🤖 Bot Management</h1>
+                    <p class="page-subtitle">120 AI bots with realistic, inconsistent study patterns — no manual work needed</p>
+                </div>
+
+                <div class="bots-controls">
+                    <button class="btn-bot primary" id="initBotsBtn">
+                        <span class="btn-icon">🤖</span> Initialize All Bots (120)
+                    </button>
+                    <button class="btn-bot secondary" id="simulateBtn">
+                        <span class="btn-icon">🔄</span> Simulate Today's Study
+                    </button>
+                    <button class="btn-bot secondary" id="refreshBtn">
+                        <span class="btn-icon">♻️</span> Refresh
+                    </button>
+                    <button class="btn-bot danger" id="deleteBotsBtn">
+                        <span class="btn-icon">🗑️</span> Delete All Bots
+                    </button>
+                </div>
+
+                <div class="info-box">
+                    <strong>ℹ️ How it works:</strong> প্রতিটি বটের আলাদা <b>personality</b> আছে — কেউ প্রতিদিন পড়ে, কেউ মাঝে মাঝে skip করে, কেউ burst করে।
+                    Study time প্রতিদিন vary করে, কোনো fixed limit নেই। <b>"Simulate Today's Study"</b> click করলে সব বট একদিনের পড়া simulate করবে।
+                    এটা daily run করলে (বা cron job দিলে) বট নিজে নিজে active থাকবে।
+                </div>
+
+                <div id="progressSection">
+                    <div class="progress-bar-track"><div id="progressFill"></div></div>
+                    <div id="progressText">Preparing...</div>
+                </div>
+
+                <div class="personality-legend">
+                    <span class="legend-item">💪 Grinder — 3–8h/day</span>
+                    <span class="legend-item">📘 Consistent — 2–5h/day</span>
+                    <span class="legend-item">😌 Casual — 0.5–3h/day</span>
+                    <span class="legend-item">🎲 Irregular — unpredictable</span>
+                    <span class="legend-item">🦉 Night Owl — 1–4h</span>
+                    <span class="legend-item">🏖️ Weekend warrior</span>
+                    <span class="legend-item">⚡ Burst — rare but long</span>
+                    <span class="legend-item">🎯 Moderate — 1.5–4h</span>
+                </div>
+
+                <div id="botStats"></div>
+
+                <div class="bots-filter-row">
+                    <input type="text" id="searchBots" placeholder="🔍 Search bots by name..." />
+                    <select id="filterPersonality">
+                        <option value="all">All Personalities</option>
+                        <option value="grinder">💪 Grinder</option>
+                        <option value="consistent">📘 Consistent</option>
+                        <option value="casual">😌 Casual</option>
+                        <option value="irregular">🎲 Irregular</option>
+                        <option value="night_owl">🦉 Night Owl</option>
+                        <option value="weekend">🏖️ Weekend</option>
+                        <option value="burst">⚡ Burst</option>
+                        <option value="moderate">🎯 Moderate</option>
+                    </select>
+                    <span id="botCount"></span>
+                </div>
+
+                <div id="botsGrid">
+                    <div class="bots-loading">
+                        <div class="spinner"></div>
+                        <p>Checking for bots...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/bots.js"></script>
+</body>
+</html>

@@ -85,3 +85,156 @@ html , body{
     background-color: #445483;
     box-shadow: 2px 3px 5px  #ccdaff;
 }
+
+/* body start  */
+
+.body h1{
+    color: white;
+    margin: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.body p{
+    margin: 0;
+    color: white;
+    margin-left: 10px;
+}
+
+.body .addtask{
+    width: 100px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #445483;
+    color: white;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    transition: 0.3s ease-in;
+}
+
+.body .addtask:hover{
+    box-shadow: 5px 5px 10px #8ca1e0;
+    transform: scale(1.1);
+}
+
+.body .addtask:active{
+    transform: scale(0.5);
+}
+
+.body .addtask h3{
+    margin-left: 5px;
+}
+
+.body .statusbtn{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.body .statusbtn .a{
+    width: 150px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #445483;
+    color: white;
+    font-size: 1.2em;
+    margin-right: 10px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+}
+
+.body .statusbtn .a:hover{
+    transform: scale(1.05);
+}
+
+.tasks{
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.task1{
+    width: 80%;
+    background-color: #212e57;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.task1 .details{
+    width: 100%;
+}
+
+.task1 input[type="checkbox"]{
+    width: 30px;
+    height: 30px;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.task1 .details .tasktitle{
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.task1 .details .tasktitle h2{
+    color: white;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.task1 .details .tasktitle .deletebtn{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    background-color: #435170;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.task1 .details .tasktitle .deletebtn i{
+    color: white;
+
+}
+
+.taskinfo{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.dateinfo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 25px;
+    color: #8ca1e0;
+}
+
+.subjectinfo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #8ca1e0;
+}
+/* body end  */
